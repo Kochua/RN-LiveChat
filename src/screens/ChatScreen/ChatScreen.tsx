@@ -1,18 +1,21 @@
 import * as React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native'
+import { ChatHeader } from '../../components'
+import ChatBody from './_components/ChatBody'
 
 const ChatScreen = ({ route, navigation }) => {
    const params = route.params
 
    return (
-      <View style={styles.wrapper}>
-         <Text>Chati zd </Text>
-      </View>
+      <SafeAreaView style={styles.wrapper}>
+         <ChatHeader />
+         <ChatBody />
+      </SafeAreaView>
    )
 }
 
 const styles = StyleSheet.create({
-   wrapper: {},
+   wrapper: { flex: 1, backgroundColor: '#fff' },
 })
 
 export default ChatScreen

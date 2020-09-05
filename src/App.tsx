@@ -31,7 +31,10 @@ function App() {
             <Stack.Screen
                name="Chat"
                component={ChatScreen}
-               options={{ headerStyle: { backgroundColor: '#8A2BE2' } }}
+               options={{
+                  headerStyle: { backgroundColor: '#8A2BE2' },
+                  headerShown: false,
+               }}
             />
          </Stack.Navigator>
       </NavigationContainer>
