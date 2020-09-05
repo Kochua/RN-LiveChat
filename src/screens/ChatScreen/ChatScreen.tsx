@@ -6,7 +6,7 @@ const ChatScreen = ({ route, navigation }) => {
 
    return (
       <View style={styles.wrapper}>
-         <Text>Chati zd</Text>
+         <Text>Chati zd </Text>
       </View>
    )
 }
