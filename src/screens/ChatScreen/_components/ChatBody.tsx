@@ -1,37 +1,29 @@
 import * as React from 'react'
-import { StyleSheet, View, Text, FlatList } from 'react-native'
+import {
+   StyleSheet,
+   View,
+   Text,
+   FlatList,
+   Button,
+   Dimensions,
+   Animated,
+   Easing,
+} from 'react-native'
 
-const DATA = [
-   { userId: '1', text: 'traki' },
-   { userId: '2', text: 'Zdarova aba brat' },
-   { userId: '2', text: 'rogorxar?' },
-   { userId: '1', text: 'Kargad Shen?' },
-   { userId: '2', text: 'Ravi aramiShavs shen ras schrebi ras saqmianob?' },
-   { userId: '1', text: 'traki' },
-   { userId: '2', text: 'Zdarova aba brat' },
-   { userId: '2', text: 'rogorxar?' },
-   { userId: '1', text: 'Kargad Shen?' },
-   { userId: '2', text: 'Ravi aramiShavs shen ras schrebi ras saqmianob?' },
-   { userId: '1', text: 'traki' },
-   { userId: '2', text: 'Zdarova aba brat' },
-   { userId: '2', text: 'rogorxar?' },
-   { userId: '1', text: 'Kargad Shen?' },
-   { userId: '2', text: 'Ravi aramiShavs shen ras schrebi ras saqmianob?' },
-   { userId: '1', text: 'traki' },
-   { userId: '2', text: 'Zdarova aba brat' },
-   { userId: '2', text: 'rogorxar?' },
-   { userId: '1', text: 'Kargad Shen?' },
-   { userId: '2', text: 'Ravi aramiShavs shen ras schrebi ras saqmianob?' },
-   { userId: '1', text: 'traki' },
-   { userId: '2', text: 'Zdarova aba brat' },
-   { userId: '2', text: 'rogorxar?' },
-   { userId: '1', text: 'Kargad Shen?' },
-   { userId: '2', text: 'Ravi aramiShavs shen ras schrebi ras saqmianob?' },
-]
+const HEIGHT = Dimensions.get('window').height
 
-const ChatListItem = ({ item }) => {
+const ChatListItem = React.memo(({ item }) => {
    const { userId, text } = item
    const isCurrentUser = userId === '1'
+   const animValue = React.useRef(new Animated.Value(0)).current
+
+   React.useEffect(() => {
+      Animated.timing(animValue, {
+         toValue: 1,
+         duration: 600,
+         useNativeDriver: true,
+      }).start()
+   }, [])
 
    const messageBorderRadius = isCurrentUser
       ? {
@@ -46,6 +38,18 @@ const ChatListItem = ({ item }) => {
    const messamgeColor = isCurrentUser ? '#8A2BE2' : '#E6E6FA'
    const messamgeTextolor = isCurrentUser ? '#fff' : '#000'
 
+   const messageTranslateStyle = animValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: isCurrentUser ? [60, 0] : [-60, 0],
+      extrapolate: 'clamp',
+   })
+
+   const messageOpacityAnimStyle = animValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+   })
+
    return (
       <View
          style={{
@@ -55,7 +59,7 @@ const ChatListItem = ({ item }) => {
             alignItems: messageAlign,
          }}
       >
-         <View
+         <Animated.View
             style={[
                {
                   maxWidth: '80%',
@@ -64,25 +68,38 @@ const ChatListItem = ({ item }) => {
                   paddingVertical: 18,
                },
                messageBorderRadius,
+               {
+                  opacity: messageOpacityAnimStyle,
+                  transform: [{ translateX: messageTranslateStyle }],
+               },
             ]}
          >
             <Text style={{ color: messamgeTextolor }}>{text}</Text>
-         </View>
+         </Animated.View>
       </View>
    )
-}
+})
 
-const ChatBody = () => {
+const ChatBody = ({ messages }) => {
+   const _inputRef = React.useRef(null)
+   React.useEffect(() => {}, [])
+
    return (
       <View style={styles.wrapper}>
          <FlatList
-            data={DATA.reverse()}
-            renderItem={ChatListItem}
+            data={messages}
+            renderItem={({ item }) => <ChatListItem item={item} />}
             keyExtractor={(item) => item.id}
             scrollEnabled
+            style={{ paddingBottom: 5 }}
             contentContainerStyle={{
                paddingTop: 7.5,
+               paddingBottom: 7.5,
                justifyContent: 'flex-end',
+            }}
+            ref={_inputRef}
+            onContentSizeChange={() => {
+               _inputRef.current.scrollToEnd({ animated: true })
             }}
          />
       </View>
