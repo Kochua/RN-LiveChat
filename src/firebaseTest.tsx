@@ -133,12 +133,6 @@ function App() {
       return () => database().ref('/users').off('value', onChildAdd)
    }, [])
 
-   const _onMessageSent = (message) => {
-      const updateMessages = [...messages, ...message]
-
-      setMessages(updateMessages)
-   }
-
    const _setFirstMessage = () => {
       const updatedMessage = [
          ...messages,

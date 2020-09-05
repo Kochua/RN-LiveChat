@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View, Text, SafeAreaView, Button } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { MessengerScreen, ChatScreen } from './screens'
+import { RoomScreen, ChatScreen } from './screens'
 
 function HomeScreen({ navigation }) {
    return (
@@ -10,7 +10,7 @@ function HomeScreen({ navigation }) {
          <Text>Home Screen</Text>
          <Button
             title="Go to Messenger"
-            onPress={() => navigation.navigate('Messenger')}
+            onPress={() => navigation.navigate('Room')}
          />
       </View>
    )
@@ -24,8 +24,8 @@ function App() {
          <Stack.Navigator>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen
-               name="Messenger"
-               component={MessengerScreen}
+               name="Room"
+               component={RoomScreen}
                options={{ headerStyle: { backgroundColor: '#8A2BE2' } }}
             />
             <Stack.Screen

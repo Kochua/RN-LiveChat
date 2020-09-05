@@ -1,4 +1,4 @@
-import MessengerScreen from './MessengerScreen'
+import RoomScreen from './RoomScreen'
 import ChatScreen from './ChatScreen'
 
-export { MessengerScreen, ChatScreen }
+export { RoomScreen, ChatScreen }

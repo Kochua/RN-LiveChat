@@ -1,6 +1,8 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Button } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import database from '@react-native-firebase/database'
+import { forEach } from 'lodash'
 
 const MessengerUserTicket = ({
    navigation,
@@ -99,11 +101,62 @@ const MessengerHeader = () => {
    )
 }
 
-const MessengerScreen = ({ navigation }) => {
+const RoomScreen = ({ navigation }) => {
+   const [users, setUsers] = React.useState([])
+
+   React.useEffect(() => {
+      const onChildAdd = database()
+         .ref('/users')
+         .on('value', (snapshot) => {
+            const usersDB = snapshot.val()
+            const _users = []
+            forEach(usersDB, (user) => {
+               _users.push(user)
+            })
+            setUsers(_users)
+         })
+
+      // Stop listening for updates when no longer required
+      return () => database().ref('/users').off('value', onChildAdd)
+   }, [])
+
+   const onAdded = () => {
+      const newReference = database().ref('/users').push()
+
+      newReference.set({
+         email: 'ikakochua@gmail.com',
+         userName: 'Irakli Kochua',
+         lastMessage: 'Hey friend send me a message',
+         lastMessageTime: new Date(),
+      })
+
+      // database()
+      //    .ref('/users/123')
+      //    .set({
+      //       name: 'Ada Lovelace',
+      //       age: 31,
+      //    })
+      //    .then(() => console.log('Data set.'))
+   }
+
    return (
       <ScrollView style={styles.wrapper}>
          <MessengerHeader />
-         <MemoizedMessengerUser navigation={navigation} />
+         <Button title="add tipi" onPress={onAdded} />
+         {users.map((user) => {
+            const dateMinutes = new Date(user.lastMessageTime).getMinutes()
+            const minutes = new Date().getMinutes() - dateMinutes
+            return (
+               <MemoizedMessengerUser
+                  key={user.id}
+                  navigation={navigation}
+                  userName={user.userName}
+                  lastMessage={user.lastMessage}
+                  lastMessageTime={minutes}
+               />
+            )
+         })}
+         {/* <MemoizedMessengerUser navigation={navigation} />
          <MemoizedMessengerUser
             navigation={navigation}
             userName="Giorgi Maspindzelashvili"
@@ -127,7 +180,7 @@ const MessengerScreen = ({ navigation }) => {
             navigation={navigation}
             userName="Zurab Japaridze"
             lastMessageTime="2 hour ago"
-         />
+         /> */}
       </ScrollView>
    )
 }
@@ -139,4 +192,4 @@ const styles = StyleSheet.create({
    },
 })
 
-export default MessengerScreen
+export default RoomScreen
