@@ -6,6 +6,7 @@ import { forEach } from 'lodash'
 
 const MessengerUserTicket = ({
    navigation,
+   nickname,
    userName = 'Irakli Kochua',
    lastMessage = 'I must tell you something about ur ',
    lastMessageTime = '3 min ago',
@@ -14,7 +15,14 @@ const MessengerUserTicket = ({
 
    return (
       <TouchableOpacity
-         onPress={() => navigation.navigate('Chat', { user: 'traki' })}
+         onPress={() =>
+            navigation.navigate('Chat', {
+               user: {
+                  userName,
+                  nickname,
+               },
+            })
+         }
       >
          <View
             style={{
@@ -101,8 +109,9 @@ const MessengerHeader = () => {
    )
 }
 
-const RoomScreen = ({ navigation }) => {
+const RoomScreen = ({ navigation, route }) => {
    const [users, setUsers] = React.useState([])
+   const { nickname } = route.params
 
    React.useEffect(() => {
       const onChildAdd = database()
@@ -117,70 +126,35 @@ const RoomScreen = ({ navigation }) => {
          })
 
       // Stop listening for updates when no longer required
-      return () => database().ref('/users').off('value', onChildAdd)
+      return () => {
+         database().ref('/users').off('value', onChildAdd)
+         database().ref(`/users/${nickname}`).remove()
+      }
    }, [])
-
-   const onAdded = () => {
-      const newReference = database().ref('/users').push()
-
-      newReference.set({
-         email: 'ikakochua@gmail.com',
-         userName: 'Irakli Kochua',
-         lastMessage: 'Hey friend send me a message',
-         lastMessageTime: new Date(),
-      })
-
-      // database()
-      //    .ref('/users/123')
-      //    .set({
-      //       name: 'Ada Lovelace',
-      //       age: 31,
-      //    })
-      //    .then(() => console.log('Data set.'))
-   }
 
    return (
       <ScrollView style={styles.wrapper}>
          <MessengerHeader />
-         <Button title="add tipi" onPress={onAdded} />
          {users.map((user) => {
             const dateMinutes = new Date(user.lastMessageTime).getMinutes()
             const minutes = new Date().getMinutes() - dateMinutes
-            return (
-               <MemoizedMessengerUser
-                  key={user.id}
-                  navigation={navigation}
-                  userName={user.userName}
-                  lastMessage={user.lastMessage}
-                  lastMessageTime={minutes}
-               />
-            )
+
+            if (user.nickname === nickname) {
+               //do not show myself
+               return null
+            } else {
+               return (
+                  <MemoizedMessengerUser
+                     key={user.nickname}
+                     nickname={user.nickname}
+                     navigation={navigation}
+                     userName={user.userName}
+                     lastMessage={user.lastMessage}
+                     lastMessageTime={minutes}
+                  />
+               )
+            }
          })}
-         {/* <MemoizedMessengerUser navigation={navigation} />
-         <MemoizedMessengerUser
-            navigation={navigation}
-            userName="Giorgi Maspindzelashvili"
-         />
-         <MemoizedMessengerUser
-            navigation={navigation}
-            userName="Bachana Abesadze"
-            lastMessageTime="1 hour ago"
-         />
-         <MemoizedMessengerUser
-            navigation={navigation}
-            userName="Lasha Talaxadze"
-            lastMessageTime="1 hour ago"
-         />
-         <MemoizedMessengerUser
-            navigation={navigation}
-            userName="Lionel Messi"
-            lastMessageTime="2 hour ago"
-         />
-         <MemoizedMessengerUser
-            navigation={navigation}
-            userName="Zurab Japaridze"
-            lastMessageTime="2 hour ago"
-         /> */}
       </ScrollView>
    )
 }
