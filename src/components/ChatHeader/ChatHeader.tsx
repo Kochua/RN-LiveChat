@@ -1,20 +1,27 @@
 import * as React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 
 import Avatar from '../Avatar'
 import { BackArrowIcon } from '../../assets/Icons'
 
-const ChatHeader = ({ userImg, userName = 'Irakli Kochua', isOnline }) => {
+const ChatHeader = ({
+   navigation,
+   userImg = '',
+   userName = 'Irakli Kochua',
+}) => {
    return (
       <View style={styles.wrapper}>
          <View style={styles.inner}>
-            <View style={{ paddingHorizontal: 15 }}>
+            <TouchableOpacity
+               onPress={() => navigation.goBack()}
+               style={{ paddingHorizontal: 15 }}
+            >
                <BackArrowIcon width={12} height={16} />
-            </View>
+            </TouchableOpacity>
             <Avatar />
             <View style={{ paddingLeft: 20 }}>
                <Text style={{ fontSize: 25, color: '#000' }}>{userName}</Text>
-               <Text>Online</Text>
+               <Text style={{ color: '#32CD32' }}>Online</Text>
             </View>
          </View>
       </View>

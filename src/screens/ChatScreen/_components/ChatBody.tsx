@@ -12,9 +12,9 @@ import {
 
 const HEIGHT = Dimensions.get('window').height
 
-const ChatListItem = React.memo(({ item }) => {
+const ChatListItem = React.memo(({ item, currentUserNickname }) => {
    const { userId, text } = item
-   const isCurrentUser = userId === '1'
+   const isCurrentUser = userId === currentUserNickname
    const animValue = React.useRef(new Animated.Value(0)).current
 
    React.useEffect(() => {
@@ -27,8 +27,9 @@ const ChatListItem = React.memo(({ item }) => {
 
    const messageBorderRadius = isCurrentUser
       ? {
-           borderTopLeftRadius: 15,
-           borderBottomLeftRadius: 15,
+           borderTopLeftRadius: 20,
+           borderBottomLeftRadius: 20,
+           borderTopRightRadius: 20,
         }
       : {
            borderTopRightRadius: 15,
@@ -80,29 +81,34 @@ const ChatListItem = React.memo(({ item }) => {
    )
 })
 
-const ChatBody = ({ messages }) => {
+const ChatBody = ({ messages, currentUserNickname }) => {
    const _inputRef = React.useRef(null)
-   React.useEffect(() => {}, [])
 
    return (
-      <View style={styles.wrapper}>
-         <FlatList
-            data={messages}
-            renderItem={({ item }) => <ChatListItem item={item} />}
-            keyExtractor={(item) => item.id}
-            scrollEnabled
-            style={{ paddingBottom: 5 }}
-            contentContainerStyle={{
-               paddingTop: 7.5,
-               paddingBottom: 7.5,
-               justifyContent: 'flex-end',
-            }}
-            ref={_inputRef}
-            onContentSizeChange={() => {
-               _inputRef.current.scrollToEnd({ animated: true })
-            }}
-         />
-      </View>
+      // <View style={styles.wrapper}>
+      <FlatList
+         data={messages}
+         renderItem={({ item }) => (
+            <ChatListItem
+               item={item}
+               currentUserNickname={currentUserNickname}
+            />
+         )}
+         keyExtractor={(item) => item.id}
+         scrollEnabled
+         style={{ paddingBottom: 15, flex: 1 }}
+         contentContainerStyle={{
+            // flex: 1,
+            paddingTop: 7.5,
+            paddingBottom: 15,
+            justifyContent: 'flex-end',
+         }}
+         ref={_inputRef}
+         onContentSizeChange={() => {
+            _inputRef.current.scrollToEnd({ animated: false })
+         }}
+      />
+      // </View>
    )
 }
 

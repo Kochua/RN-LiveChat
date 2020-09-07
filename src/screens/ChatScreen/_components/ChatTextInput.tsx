@@ -78,7 +78,7 @@ const ChatTextInput = ({ onTextSend }) => {
 }
 
 const styles = StyleSheet.create({
-   wrapper: { height: 60, width: '100%', borderTopWidth: 1 },
+   wrapper: { height: 60, width: '100%' },
 })
 
 export default ChatTextInput

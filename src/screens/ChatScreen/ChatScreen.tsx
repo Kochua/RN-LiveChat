@@ -6,7 +6,10 @@ import {
    SafeAreaView,
    KeyboardAvoidingView,
    Platform,
+   Alert,
 } from 'react-native'
+import { forEach, orderBy } from 'lodash'
+import database from '@react-native-firebase/database'
 
 import { ChatHeader } from '../../components'
 import ChatBody from './_components/ChatBody'
@@ -61,19 +64,67 @@ const DATA = [
 ]
 
 const ChatScreen = ({ route, navigation }) => {
-   const [messages, setMessages] = React.useState(DATA.reverse())
-   const params = route.params
+   const [messages, setMessages] = React.useState([])
+   const { userName, nickname, currentUserNickname } = route.params
+   const [lastMessageId, setLastMessageId] = React.useState(1)
+
+   const chatLinkKey =
+      currentUserNickname > nickname
+         ? `${currentUserNickname}_${nickname}`
+         : `${nickname}_${currentUserNickname}`
+
+   React.useEffect(() => {
+      const onChildAdd = database()
+         .ref(`/messages/${chatLinkKey}`)
+         .on('value', (snapshot) => {
+            const messagesDb = snapshot.val()
+            const _messages = []
+            forEach(messagesDb, (message) => {
+               _messages.push(message)
+            })
+
+            const orderedMessages = orderBy(
+               _messages,
+               ['lastMessageKey'],
+               ['desc']
+            )
+
+            // console.log('orderedMessages', orderedMessages)
+            if (orderedMessages[0]) {
+               const lastMessage = orderedMessages[0]
+               setLastMessageId(lastMessage.lastMessageKey + 1)
+            }
+            const reversedMessages = orderedMessages.reverse()
+            setMessages(reversedMessages)
+         })
+
+      // Stop listening for updates when no longer required
+      return () => {
+         database().ref(`/messages/${chatLinkKey}`).off('value', onChildAdd)
+      }
+   }, [])
 
    const onTextSendHandler = (text) => {
       const newMessage = {
          id: Math.floor(Math.random() * 1000000 + 1).toString(),
          text: text,
-         userId: Math.floor(Math.random() * 2 + 1).toString(),
+         userId: currentUserNickname,
+         lastMessageKey: lastMessageId,
       }
-      const upDatedMessages = [...messages, newMessage]
 
-      setMessages(upDatedMessages)
+      const newReference = database().ref(`/messages/${chatLinkKey}`).push()
+
+      newReference
+         .set(newMessage)
+         .then(() => {
+            console.log('DATA SET')
+         })
+         .catch((e) => {
+            Alert.alert('error', e.error)
+         })
    }
+
+   // console.log('messages', messages)
 
    return (
       <SafeAreaView style={styles.wrapper}>
@@ -81,8 +132,11 @@ const ChatScreen = ({ route, navigation }) => {
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
             style={styles.wrapper}
          >
-            <ChatHeader />
-            <ChatBody messages={messages} />
+            <ChatHeader navigation={navigation} userName={userName} />
+            <ChatBody
+               messages={messages}
+               currentUserNickname={currentUserNickname}
+            />
             <ChatTextInput onTextSend={onTextSendHandler} />
          </KeyboardAvoidingView>
       </SafeAreaView>

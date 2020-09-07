@@ -1,18 +1,29 @@
 import * as React from 'react'
-import { StyleSheet, View, Text, TextInput, Alert } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import {
+   StyleSheet,
+   View,
+   Text,
+   TextInput,
+   Alert,
+   ActivityIndicator,
+   TouchableOpacity,
+} from 'react-native'
 import database from '@react-native-firebase/database'
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }: any) => {
    const [loading, setLoading] = React.useState(false)
    const [nickname, setNickname] = React.useState('')
    const [fullName, setFullName] = React.useState('')
 
    const buttonDisabled = !nickname || !fullName
 
+   const clearValues = () => {
+      setNickname('')
+      setFullName('')
+   }
+
    const onButtonPress = () => {
       setLoading(true)
-
       database()
          .ref(`/users/${nickname}`)
          .set({
@@ -23,44 +34,33 @@ const LoginScreen = ({ navigation }) => {
          })
          .then(() => {
             navigation.navigate('Room', { nickname })
+            clearValues()
+            setLoading(false)
          })
          .catch((e) => {
             Alert.alert('error', e.error)
+            clearValues()
+            setLoading(false)
          })
    }
 
    return (
       <View style={styles.wrapper}>
          <View style={styles.inner}>
-            <View
-               style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  borderRadius: 6,
-                  borderWidth: 1,
-                  minWidth: 250,
-                  borderColor: '#8A2BE2',
-                  marginBottom: 10,
-               }}
-            >
+            <Text style={styles.title}>
+               Just sign up with unique nickname and start chating
+            </Text>
+            <View style={styles.input_container}>
                <TextInput
-                  placeholder="nickname"
+                  placeholder="@nickname"
                   value={nickname}
                   onChangeText={(text) => setNickname(text)}
                />
             </View>
-            <View
-               style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  borderRadius: 6,
-                  borderWidth: 1,
-                  minWidth: 250,
-                  borderColor: '#8A2BE2',
-               }}
-            >
+
+            <View style={styles.input_container}>
                <TextInput
-                  placeholder="full name"
+                  placeholder="display name"
                   value={fullName}
                   onChangeText={(text) => setFullName(text)}
                />
@@ -71,7 +71,13 @@ const LoginScreen = ({ navigation }) => {
                style={{ marginTop: 30 }}
                disabled={buttonDisabled}
             >
-               <Text style={{ fontSize: 17 }}>Start the conversation </Text>
+               {loading ? (
+                  <ActivityIndicator />
+               ) : (
+                  <Text style={styles.button_text}>
+                     Start the conversation{' '}
+                  </Text>
+               )}
             </TouchableOpacity>
          </View>
       </View>
@@ -85,6 +91,22 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
    },
+   title: {
+      marginTop: -50,
+      marginBottom: 50,
+      fontSize: 25,
+      textAlign: 'center',
+   },
+   input_container: {
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      borderRadius: 6,
+      borderWidth: 1,
+      minWidth: 300,
+      borderColor: '#8A2BE2',
+      marginBottom: 10,
+   },
+   button_text: { fontSize: 17, color: '#007AFF' },
 })
 
 export default LoginScreen
