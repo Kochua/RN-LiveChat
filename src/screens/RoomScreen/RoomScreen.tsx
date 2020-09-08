@@ -19,7 +19,7 @@ interface UserType {
 
 function RoomScreen({ navigation, route }: RoomScreenProps) {
    const [users, setUsers] = React.useState([])
-   const { nickname } = route.params
+   const { nickname, userName } = route.params
    const numberOnline = users.length - 1
 
    React.useEffect(() => {
@@ -42,10 +42,12 @@ function RoomScreen({ navigation, route }: RoomScreenProps) {
       }
    }, [])
 
+   console.log('zzdzd', userName)
+
    return (
       <ScrollView style={styles.wrapper}>
          <MessengerHeader
-            userName={nickname}
+            userName={userName}
             nickname={nickname}
             numberOnline={numberOnline}
          />

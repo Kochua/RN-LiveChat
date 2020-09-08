@@ -14,13 +14,13 @@ import { ScrollView } from 'react-native-gesture-handler'
 const LoginScreen = ({ navigation }: any) => {
    const [loading, setLoading] = React.useState(false)
    const [nickname, setNickname] = React.useState('')
-   const [fullName, setFullName] = React.useState('')
+   const [userName, setUserName] = React.useState('')
 
-   const buttonDisabled = !nickname || !fullName
+   const buttonDisabled = !nickname || !userName
 
    const clearValues = () => {
       setNickname('')
-      setFullName('')
+      setUserName('')
    }
 
    const onButtonPress = () => {
@@ -29,12 +29,12 @@ const LoginScreen = ({ navigation }: any) => {
          .ref(`/users/${nickname}`)
          .set({
             nickname,
-            userName: fullName,
+            userName,
             lastMessage: 'Hey lets start the conversation',
             lastMessageTime: new Date(),
          })
          .then(() => {
-            navigation.navigate('Room', { nickname })
+            navigation.navigate('Room', { nickname, userName })
             clearValues()
             setLoading(false)
          })
@@ -62,8 +62,8 @@ const LoginScreen = ({ navigation }: any) => {
             <View style={styles.input_container}>
                <TextInput
                   placeholder="display name"
-                  value={fullName}
-                  onChangeText={(text) => setFullName(text)}
+                  value={userName}
+                  onChangeText={(text) => setUserName(text)}
                />
             </View>
 
