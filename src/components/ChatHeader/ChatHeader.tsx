@@ -4,17 +4,21 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import Avatar from '../Avatar'
 import { BackArrowIcon } from '../../assets/Icons'
 
+interface ChatHeaderProps {
+   navigation: any
+   userName: string
+}
+
 const ChatHeader = ({
    navigation,
-   userImg = '',
    userName = 'Irakli Kochua',
-}) => {
+}: ChatHeaderProps) => {
    return (
       <View style={styles.wrapper}>
          <View style={styles.inner}>
             <TouchableOpacity
                onPress={() => navigation.goBack()}
-               style={{ paddingHorizontal: 15 }}
+               style={{ padding: 15 }}
             >
                <BackArrowIcon width={12} height={16} />
             </TouchableOpacity>
