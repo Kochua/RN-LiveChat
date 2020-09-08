@@ -73,7 +73,7 @@ const LoginScreen = ({ navigation }: any) => {
                disabled={buttonDisabled}
             >
                {loading ? (
-                  <ActivityIndicator />
+                  <ActivityIndicator color="blue" />
                ) : (
                   <Text style={styles.button_text}>
                      Start the conversation{' '}
