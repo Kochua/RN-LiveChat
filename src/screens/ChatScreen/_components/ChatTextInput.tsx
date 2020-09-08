@@ -2,7 +2,11 @@ import * as React from 'react'
 import { StyleSheet, View, Text, TextInput, Keyboard } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const ChatTextInput = ({ onTextSend }) => {
+interface ChatTextInputProps {
+   onTextSend: (text: string) => any
+}
+
+const ChatTextInput = ({ onTextSend }: ChatTextInputProps) => {
    const [textInput, setTextInput] = React.useState('')
 
    React.useEffect(() => {
@@ -17,6 +21,9 @@ const ChatTextInput = ({ onTextSend }) => {
    }, [])
 
    const onSendPressHandler = () => {
+      if (!textInput) {
+         return null
+      }
       setTextInput('')
       onTextSend(textInput)
       Keyboard.dismiss()
@@ -24,35 +31,10 @@ const ChatTextInput = ({ onTextSend }) => {
 
    return (
       <View style={styles.wrapper}>
-         <View
-            style={{
-               flexDirection: 'row',
-               flex: 1,
-               alignItems: 'center',
-               paddingHorizontal: 10,
-            }}
-         >
-            <View
-               style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 17,
-                  backgroundColor: '#ccc',
-               }}
-            />
+         <View style={styles.inner}>
+            <View style={styles.action_btn} />
 
-            <View
-               style={{
-                  width: '70%',
-                  flexGrow: 1,
-                  backgroundColor: '#DCDCDC',
-                  height: 40,
-                  marginLeft: 10,
-                  justifyContent: 'center',
-                  borderRadius: 20,
-                  paddingLeft: 10,
-               }}
-            >
+            <View style={styles.input_container}>
                <TextInput
                   placeholder="Aa"
                   value={textInput}
@@ -62,12 +44,7 @@ const ChatTextInput = ({ onTextSend }) => {
             </View>
 
             <TouchableOpacity
-               style={{
-                  marginLeft: 10,
-                  height: '100%',
-                  paddingHorizontal: 5,
-                  justifyContent: 'center',
-               }}
+               style={styles.btn_container}
                onPress={onSendPressHandler}
             >
                <Text>Send</Text>
@@ -79,6 +56,34 @@ const ChatTextInput = ({ onTextSend }) => {
 
 const styles = StyleSheet.create({
    wrapper: { minHeight: 60, width: '100%', marginBottom: 20 },
+   inner: {
+      flexDirection: 'row',
+      flex: 1,
+      alignItems: 'center',
+      paddingHorizontal: 10,
+   },
+   action_btn: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: '#ccc',
+   },
+   input_container: {
+      width: '70%',
+      flexGrow: 1,
+      backgroundColor: '#DCDCDC',
+      height: 40,
+      marginLeft: 10,
+      justifyContent: 'center',
+      borderRadius: 20,
+      paddingLeft: 10,
+   },
+   btn_container: {
+      marginLeft: 10,
+      height: '100%',
+      paddingHorizontal: 5,
+      justifyContent: 'center',
+   },
 })
 
 export default ChatTextInput
