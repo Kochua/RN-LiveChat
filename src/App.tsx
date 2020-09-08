@@ -1,14 +1,6 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import {
-   StyleSheet,
-   View,
-   Text,
-   SafeAreaView,
-   Button,
-   TouchableOpacity,
-   Alert,
-} from 'react-native'
+import { Text, TouchableOpacity, Alert } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { RoomScreen, ChatScreen, LoginScreen } from './screens'
@@ -34,15 +26,16 @@ function App() {
 
    return (
       <NavigationContainer>
-         <Stack.Navigator>
+         <Stack.Navigator initialRouteName="Login">
             <Stack.Screen
                name="Login"
-               options={({ navigation, route }) => ({
+               options={() => ({
                   headerTitleStyle: { color: '#fff' },
                   headerStyle: { backgroundColor: '#8A2BE2' },
                })}
                component={LoginScreen}
             />
+
             <Stack.Screen
                name="Room"
                component={RoomScreen}
@@ -76,9 +69,5 @@ function App() {
       </NavigationContainer>
    )
 }
-
-const styles = StyleSheet.create({
-   wrapper: { flex: 1 },
-})
 
 export default App

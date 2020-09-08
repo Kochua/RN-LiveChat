@@ -3,12 +3,19 @@ import { StyleSheet, View, Text } from 'react-native'
 
 interface MessangerHeaderProps {
    numberOnline?: number
+   userName: string
+   nickname: string
 }
 
-const MessengerHeader = ({ numberOnline = 0 }: MessangerHeaderProps) => {
+const MessengerHeader = ({
+   userName,
+   nickname,
+   numberOnline = 0,
+}: MessangerHeaderProps) => {
    return (
       <View style={styles.container}>
-         <Text style={styles.title}>Chat Room</Text>
+         <Text style={styles.title}>{userName}</Text>
+         <Text style={{ color: 'blue' }}>@{nickname}</Text>
          <Text style={styles.titleSecondary}>
             <Text style={styles.number_online}>{numberOnline}</Text> members
             online
@@ -23,11 +30,15 @@ const styles = StyleSheet.create({
       borderBottomColor: '#D3D3D3',
       borderBottomWidth: 2,
       padding: 30,
+      paddingBottom: 10,
       paddingLeft: 25,
    },
    title: { fontSize: 30 },
    titleSecondary: {
+      alignSelf: 'flex-end',
+      marginTop: 10,
       color: '#A9A9A9',
+      marginRight: -15,
    },
    number_online: {
       color: 'green',

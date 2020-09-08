@@ -1,25 +1,26 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import database from '@react-native-firebase/database'
 import { forEach } from 'lodash'
 
 import MessengerHeader from './_components/MessengerHeader'
-import MessengerUserTicket from './_components/MessengerUserTicket'
-
-interface UserType {
-   nickname: string
-   userName: string
-}
+import UserList from './_components/UserList'
 
 interface RoomScreenProps {
    navigation: any
    route: any
 }
 
+interface UserType {
+   nickname: string
+   userName: string
+}
+
 function RoomScreen({ navigation, route }: RoomScreenProps) {
    const [users, setUsers] = React.useState([])
    const { nickname } = route.params
+   const numberOnline = users.length
 
    React.useEffect(() => {
       const onChildAdd = database()
@@ -43,24 +44,16 @@ function RoomScreen({ navigation, route }: RoomScreenProps) {
 
    return (
       <ScrollView style={styles.wrapper}>
-         <MessengerHeader />
-
-         {users.map((user: UserType) => {
-            if (user.nickname === nickname) {
-               //do not show myself
-               return null
-            } else {
-               return (
-                  <MessengerUserTicket
-                     key={user.nickname}
-                     currentUserNickname={nickname}
-                     nickname={user.nickname}
-                     navigation={navigation}
-                     userName={user.userName}
-                  />
-               )
-            }
-         })}
+         <MessengerHeader
+            userName={nickname}
+            nickname={nickname}
+            numberOnline={numberOnline}
+         />
+         <UserList
+            users={users}
+            navigation={navigation}
+            currentUserNickname={nickname}
+         />
       </ScrollView>
    )
 }

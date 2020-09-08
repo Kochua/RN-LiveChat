@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 
 import { BackArrowIcon } from '../../../assets/Icons'
 
-interface MessengerUserTicketProps {
+interface UserListTicketProps {
    navigation: any
    nickname: string
    currentUserNickname: string
@@ -12,12 +12,12 @@ interface MessengerUserTicketProps {
    lastMessageTime?: string
 }
 
-const MessengerUserTicket = ({
+const UserListTicket = ({
    navigation,
    nickname,
    currentUserNickname,
    userName,
-}: MessengerUserTicketProps) => {
+}: UserListTicketProps) => {
    const _userFirstLetter = userName.charAt(0)
 
    return (
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
       marginBottom: 3,
    },
    text_nickname_text: {
-      color: '#C0C0C0',
+      color: 'blue',
    },
    right_side_container: {
       height: '100%',
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
    },
 })
 
-export default React.memo(MessengerUserTicket)
+export default React.memo(UserListTicket)
