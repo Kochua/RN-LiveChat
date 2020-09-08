@@ -9,7 +9,7 @@ interface UserType {
 }
 
 interface UserListProps {
-   users: []
+   users: any
    navigation: any
    currentUserNickname: string
 }
@@ -19,7 +19,7 @@ const UserList = ({
    navigation,
    currentUserNickname,
 }: UserListProps) => {
-   if (users.length === 1) {
+   if (users.length <= 1) {
       return (
          <View style={styles.no_members_wrapper}>
             <Text style={styles.no_members_text}>Only you is online!</Text>
@@ -27,7 +27,7 @@ const UserList = ({
       )
    }
 
-   return users.map((user: UserType, i) => {
+   return users.map((user: UserType, i: any) => {
       if (user.nickname === currentUserNickname) {
          //do not show myself
          return <View key={i} />

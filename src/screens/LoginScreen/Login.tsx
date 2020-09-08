@@ -9,6 +9,7 @@ import {
    TouchableOpacity,
 } from 'react-native'
 import database from '@react-native-firebase/database'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const LoginScreen = ({ navigation }: any) => {
    const [loading, setLoading] = React.useState(false)
@@ -45,7 +46,7 @@ const LoginScreen = ({ navigation }: any) => {
    }
 
    return (
-      <View style={styles.wrapper}>
+      <ScrollView style={styles.wrapper} contentContainerStyle={{ flex: 1 }}>
          <View style={styles.inner}>
             <Text style={styles.title}>
                Just sign up with unique nickname and start chating
@@ -80,7 +81,7 @@ const LoginScreen = ({ navigation }: any) => {
                )}
             </TouchableOpacity>
          </View>
-      </View>
+      </ScrollView>
    )
 }
 
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
       marginBottom: 50,
       fontSize: 25,
       textAlign: 'center',
+      paddingHorizontal: 7,
    },
    input_container: {
       paddingHorizontal: 15,

@@ -17,8 +17,8 @@ const MessengerHeader = ({
          <Text style={styles.title}>{userName}</Text>
          <Text style={{ color: 'blue' }}>@{nickname}</Text>
          <Text style={styles.titleSecondary}>
-            <Text style={styles.number_online}>{numberOnline}</Text> members
-            online
+            <Text style={styles.number_online}>{Math.abs(numberOnline)}</Text>{' '}
+            members online
          </Text>
       </View>
    )

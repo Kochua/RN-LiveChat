@@ -20,7 +20,7 @@ interface UserType {
 function RoomScreen({ navigation, route }: RoomScreenProps) {
    const [users, setUsers] = React.useState([])
    const { nickname } = route.params
-   const numberOnline = users.length
+   const numberOnline = users.length - 1
 
    React.useEffect(() => {
       const onChildAdd = database()

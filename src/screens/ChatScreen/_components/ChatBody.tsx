@@ -1,16 +1,5 @@
 import * as React from 'react'
-import {
-   StyleSheet,
-   View,
-   Text,
-   FlatList,
-   Button,
-   Dimensions,
-   Animated,
-   Easing,
-} from 'react-native'
-
-const HEIGHT = Dimensions.get('window').height
+import { StyleSheet, View, Text, FlatList, Animated } from 'react-native'
 
 const ChatListItem = React.memo(({ item, currentUserNickname }) => {
    const { userId, text } = item
@@ -32,8 +21,9 @@ const ChatListItem = React.memo(({ item, currentUserNickname }) => {
            borderTopRightRadius: 20,
         }
       : {
-           borderTopRightRadius: 15,
-           borderBottomRightRadius: 15,
+           borderTopRightRadius: 20,
+           borderBottomRightRadius: 20,
+           borderTopLeftRadius: 20,
         }
    const messageAlign = isCurrentUser ? 'flex-end' : 'flex-start'
    const messamgeColor = isCurrentUser ? '#8A2BE2' : '#E6E6FA'
@@ -56,7 +46,8 @@ const ChatListItem = React.memo(({ item, currentUserNickname }) => {
          style={{
             flexGrow: 1,
             padding: 15,
-            paddingVertical: 4,
+            paddingTop: 8,
+            paddingBottom: 0,
             alignItems: messageAlign,
          }}
       >
@@ -66,7 +57,7 @@ const ChatListItem = React.memo(({ item, currentUserNickname }) => {
                   maxWidth: '80%',
                   backgroundColor: messamgeColor,
                   paddingHorizontal: 15,
-                  paddingVertical: 18,
+                  paddingVertical: 13,
                },
                messageBorderRadius,
                {
@@ -85,7 +76,6 @@ const ChatBody = ({ messages, currentUserNickname }) => {
    const _inputRef = React.useRef(null)
 
    return (
-      // <View style={styles.wrapper}>
       <FlatList
          data={messages}
          renderItem={({ item }) => (
@@ -98,17 +88,15 @@ const ChatBody = ({ messages, currentUserNickname }) => {
          scrollEnabled
          style={{ paddingBottom: 15, flex: 1 }}
          contentContainerStyle={{
-            // flex: 1,
+            flexGrow: 1,
             paddingTop: 7.5,
-            paddingBottom: 15,
             justifyContent: 'flex-end',
          }}
          ref={_inputRef}
          onContentSizeChange={() => {
-            _inputRef.current.scrollToEnd({ animated: false })
+            _inputRef.current.scrollToEnd({ animated: true })
          }}
       />
-      // </View>
    )
 }
 

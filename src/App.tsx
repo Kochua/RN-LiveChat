@@ -1,8 +1,10 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import { Text, TouchableOpacity, Alert } from 'react-native'
+import { Text, TouchableOpacity, Alert, AppState } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import database from '@react-native-firebase/database'
+
 import { RoomScreen, ChatScreen, LoginScreen } from './screens'
 
 const Stack = createStackNavigator()
